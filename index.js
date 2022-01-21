@@ -16,9 +16,13 @@ app.use(signupRoutes);
 const offersRoutes = require("./routes/offer");
 app.use(offersRoutes);
 
-// app.get("*", (req, res) => {
-//   res.status(404).json({ message: "This page dooesn't exist" });
-// });
+app.get("/", (req, res) => {
+  res.json("Welcome on my Vinted Clone app =)");
+});
+
+app.get("*", (req, res) => {
+  res.status(404).json({ message: "This page dooesn't exist" });
+});
 
 app.listen(process.env.PORT, () => {
   console.log("Server has started");
