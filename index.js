@@ -20,6 +20,6 @@ app.use(offersRoutes);
 //   res.status(404).json({ message: "This page dooesn't exist" });
 // });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server has started");
 });
