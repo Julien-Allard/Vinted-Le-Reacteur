@@ -1,1 +1,3 @@
-First project, Vinted Clone, on the works
+# First project, Vinted Clone.
+
+In the works
