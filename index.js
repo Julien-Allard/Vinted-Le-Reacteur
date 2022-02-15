@@ -15,13 +15,15 @@ const signupRoutes = require("./routes/user");
 app.use(signupRoutes);
 const offersRoutes = require("./routes/offer");
 app.use(offersRoutes);
+const paymentRoutes = require("./routes/payment");
+app.use(paymentRoutes);
 
 app.get("/", (req, res) => {
-  res.json("Welcome on my Vinted Clone app =)");
+  res.json("Welcome on my Vinted Clone API =)");
 });
 
 app.get("*", (req, res) => {
-  res.status(404).json({ message: "This page dooesn't exist" });
+  res.status(404).json({ message: "This page doesn't exist" });
 });
 
 app.listen(process.env.PORT, () => {
