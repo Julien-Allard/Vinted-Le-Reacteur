@@ -14,3 +14,5 @@ The goal is to create a solid API which will be used after for a full Vinted clo
 - account security (SHA256, enc-base64)
 - Heroku for API hosting
 - Stripe for safe payment
+
+### Frontend is here : https://github.com/Julien-Allard/react-vinted-clone
