@@ -48,7 +48,7 @@ router.post("/user/signup", async (req, res) => {
 
         res.status(200).json(userInfo);
       } else {
-        res.status(400).json({ message: "Invalid or absent username" });
+        res.status(400).json({ message: "Invalid or missing username" });
       }
     } else {
       res

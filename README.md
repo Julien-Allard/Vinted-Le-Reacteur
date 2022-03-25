@@ -9,7 +9,8 @@ The goal is to create a solid API which will be used after for a full Vinted clo
 - dotenv
 - mongoose
 - cors
-- Cloudinary
-- middlewares
+- Cloudinary to host pictures
+- middlewares for safe authentication
 - account security (SHA256, enc-base64)
-- Heroku
+- Heroku for API hosting
+- Stripe for safe payment

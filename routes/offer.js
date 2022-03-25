@@ -57,11 +57,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
 
       await newOffer.save();
 
-      const newUserDetails = await Offer.findOne({
-        owner: req.user.id,
-      }).populate("owner", "account");
-
-      res.status(200).json(newUserDetails);
+      res.status(200).json(newOffer);
     }
   } catch (error) {
     res.status(401).json({ error: { message: error.message } });
@@ -111,82 +107,52 @@ router.put("/offer/modify", isAuthenticated, async (req, res) => {
 
 router.get("/offers", async (req, res) => {
   try {
-    if (req.query.title || req.query.priceMin || req.query.priceMax) {
-      const filters = {};
+    const filters = {};
 
-      if (req.query.title) {
-        filters.product_name = new RegExp(req.query.title, "i");
-      }
-
-      if (req.query.priceMin || req.query.priceMax) {
-        filters.product_price = {};
-
-        if (req.query.priceMin) {
-          filters.product_price.$gte = Number(req.query.priceMin);
-        }
-
-        if (req.query.priceMax) {
-          filters.product_price.$lte = Number(req.query.priceMax);
-        }
-      }
-
-      //   if (req.query.page) {
-      //     if (req.query.sort) {
-      //       const offers = await Offer.find(filters)
-      //         .sort({
-      //           product_price: req.query.sort.replace("price-", ""),
-      //         })
-      //         .limit(2)
-      //         .skip((req.query.page - 1) * 2);
-      //       res.status(200).json(offers);
-      //     } else {
-      //       const offers = await Offer.find(filters)
-      //         .limit(2)
-      //         .skip((req.query.page - 1) * 2);
-      //       res.status(200).json(offers);
-      //     }
-      //   } else {
-      //     if (req.query.sort) {
-      //       const offers = await Offer.find(filters)
-      //         .sort({
-      //           product_price: req.query.sort.replace("price-", ""),
-      //         })
-      //         .limit(2);
-      //       res.status(200).json(offers);
-      //     } else {
-      //       const offers = await Offer.find(filters).limit(2);
-      //       res.status(200).json(offers);
-      //     }
-      //   }
-      // } else {
-      //   res.status(400).json({ message: "Please use at least one filter !" });
-
-      const sortObject = {};
-      if (req.query.sort === "price-desc") {
-        sortObject.product_price = "desc";
-      } else if (req.query.sort === "price-asc") {
-        sortObject.product_price = "asc";
-      }
-
-      let limit = 3;
-      if (req.query.limit) {
-        limit = req.query.limit;
-      }
-
-      let page = 1;
-      if (req.query.page) {
-        page = req.query.page;
-      }
-
-      const offers = await Offer.find(filters)
-        .sort(sortObject)
-        .skip((page - 1) * limit)
-        .limit(limit);
-
-      const count = await Offer.countDocuments(filters);
-
-      res.status(200).json({ count: count, offers: offers });
+    if (req.query.title) {
+      filters.product_name = new RegExp(req.query.title, "i");
     }
+
+    if (req.query.priceMin || req.query.priceMax) {
+      filters.product_price = {};
+
+      if (req.query.priceMin) {
+        filters.product_price.$gte = Number(req.query.priceMin);
+      }
+
+      if (req.query.priceMax) {
+        filters.product_price.$lte = Number(req.query.priceMax);
+      }
+    }
+
+    const sortObject = {};
+    if (req.query.sort === "price-desc") {
+      sortObject.product_price = "desc";
+    } else if (req.query.sort === "price-asc") {
+      sortObject.product_price = "asc";
+    }
+
+    let page;
+    if (Number(req.query.page) < 1) {
+      page = 1;
+    } else {
+      page = Number(req.query.page);
+    }
+
+    let limit = Number(req.query.limit);
+
+    const offers = await Offer.find(filters)
+      .populate({
+        path: "owner",
+        select: "account",
+      })
+      .sort(sortObject)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const count = await Offer.countDocuments(filters);
+
+    res.status(200).json({ count: count, offers: offers });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
