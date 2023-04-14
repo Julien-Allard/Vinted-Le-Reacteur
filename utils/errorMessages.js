@@ -3,4 +3,4 @@ const ERROR = {
    signup: "Informations d'inscription invalides",
 };
 
-module.export = ERROR;
+module.exports = ERROR;
